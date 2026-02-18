@@ -4,43 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小狸日語・學員課務入口</title>
+    <title>小狸日語・學員系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap');
-        body { 
-            font-family: 'Noto Sans JP', sans-serif; 
-            background-color: #FFFFFF; 
-            font-weight: bold; 
-            font-size: 18px; 
-        }
-        .input-field { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 2px solid #F3F4F6; border-radius: 1.25rem; outline: none; }
+        body { font-family: 'Noto Sans JP', sans-serif; background-color: #FFFFFF; font-weight: bold; font-size: 18px; -webkit-font-smoothing: antialiased; }
+        .input-field { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 2px solid #F3F4F6; border-radius: 1.25rem; outline: none; font-weight: bold; }
         .card-container { border: 2px solid #F3F4F6; padding: 2rem; border-radius: 36px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .btn-blue { background-color: #60A5FA; color: white; padding: 1rem; border-radius: 1.25rem; width: 100%; transition: 0.3s; }
-        .btn-zoom { background-color: #2D8CFF; color: white; padding: 1.25rem; border-radius: 1.25rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-red { background-color: #F87171; color: white; padding: 1rem; border-radius: 1.25rem; width: 100%; }
+        .btn-zoom { background-color: #2D8CFF; color: white; padding: 1.25rem; border-radius: 1.25rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 15px -3px rgba(45, 140, 255, 0.3); }
+        .btn-red { background-color: #F87171; color: white; padding: 1rem; border-radius: 1.25rem; width: 100%; transition: 0.3s; }
         .btn-gold { background-color: #FBBF24; color: white; padding: 1rem; border-radius: 1.25rem; width: 100%; margin-top: 10px; }
-        .warning-label { background-color: #EF4444; color: white; padding: 4px 12px; border-radius: 8px; font-size: 14px; margin-bottom: 8px; display: inline-block; }
         .negative-count { color: #EF4444 !important; }
+        .warning-tag { background-color: #EF4444; color: white; padding: 4px 12px; border-radius: 8px; font-size: 14px; margin-bottom: 8px; display: inline-block; }
     </style>
 </head>
 <body class="p-6">
-
     <div class="max-w-md mx-auto">
         <header class="text-center mb-10">
             <h1 class="text-2xl font-bold text-gray-800">小狸老師整理</h1>
+            <p class="text-sm text-gray-400 mt-2 font-normal">學員專屬管理系統</p>
         </header>
 
-        <div id="login-box" class="card-container">
-            <h2 class="text-xl mb-6 text-center text-gray-700">學員登入</h2>
-            <input type="email" id="login-email" placeholder="您的 Email" class="input-field text-center font-bold">
+        <div id="login-box" class="card-container text-center">
+            <h2 class="text-xl mb-6">學員登入</h2>
+            <input type="email" id="login-email" placeholder="您的 Email" class="input-field text-center">
             <button onclick="checkStatus()" id="login-btn" class="btn-blue shadow-lg font-bold">進入系統</button>
-            <p class="text-[14px] text-gray-400 mt-4 text-center">請輸入報名時使用的 Email</p>
+            <p class="text-[14px] text-gray-400 mt-4 font-normal">請輸入報名時使用的 Email</p>
         </div>
 
         <div id="status-box" class="hidden">
             <div class="card-container border-blue-400 bg-blue-50/30 mb-6 text-center">
-                <button onclick="enterZoom()" class="btn-zoom shadow-xl text-xl font-bold">📹 進入 Zoom 教室</button>
+                <h3 class="text-blue-600 mb-2">今日課程入口</h3>
+                <button onclick="enterZoom()" class="btn-zoom text-xl font-bold">📹 進入 Zoom 教室</button>
                 <p class="text-[12px] text-blue-400 mt-2 font-normal">會議密碼: 45678</p>
             </div>
 
@@ -52,21 +48,21 @@
                 <div id="debt-msg" class="text-red-500 text-sm hidden mb-4">⚠️ 提醒：目前課程已欠費，請記得續費</div>
                 
                 <div class="mt-4 pt-6 border-t border-gray-100">
-                    <div class="warning-label">⛔ 老師專區 (學生請勿點擊)</div>
-                    <button onclick="modifyLesson('deduct')" id="deduct-btn" class="btn-red shadow-lg text-sm mb-2 font-bold">手動扣除一堂課</button>
-                    <button onclick="modifyLesson('add_lesson')" id="add-btn" class="btn-gold shadow-lg text-sm font-bold">🎁 獎勵加課一堂</button>
+                    <div class="warning-tag">⛔ 老師專區 (學生請勿點擊)</div>
+                    <button onclick="modifyLesson('deduct')" class="btn-red shadow-lg text-sm mb-2 font-bold">手動扣除一堂課</button>
+                    <button onclick="modifyLesson('add_lesson')" class="btn-gold shadow-lg text-sm font-bold">🎁 獎勵加課一堂</button>
                 </div>
             </div>
 
             <div class="card-container mb-6">
                 <h3 class="mb-4 text-blue-500">💰 續費/繳費回報</h3>
                 <div class="text-[14px] bg-gray-50 p-4 rounded-2xl mb-4 text-gray-700 font-normal border border-gray-100 text-left">
-                    <span class="font-bold text-blue-800">【小狸日語課程ー轉帳資訊】</span><br>
+                    <span class="font-bold text-blue-800">【轉帳資訊】</span><br>
                     銀行名稱：國泰世華 (013)<br>
                     轉帳帳號：075-50-608879-8
                 </div>
-                <input type="number" id="report-amount" class="input-field font-bold" placeholder="繳費金額">
-                <input type="text" id="report-five" class="input-field font-bold" placeholder="末五碼">
+                <input type="number" id="report-amount" class="input-field" placeholder="繳費金額">
+                <input type="text" id="report-five" class="input-field" placeholder="末五碼">
                 <button onclick="submitPayment()" id="report-btn" class="w-full bg-green-400 text-white py-4 rounded-2xl shadow-md font-bold">提交回報資料</button>
             </div>
             
@@ -75,7 +71,7 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbz-i8X5_Ekbz6fWE0LO9HWtPyXsvxPpYL0Moq2eGUUIgtCjdqEE_nED14Ui2DR9aXRZ/exec"; 
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwhtULtHjAx3_7jxT-9k-v_ybBc32BCmO7fZTZ24Bmn8DXBi2ZyypuJuv-lyQFULKKK/exec"; 
         const ZOOM_LINK = "https://zoom.us/j/93019761780"; 
 
         window.onload = function() {
@@ -109,7 +105,7 @@
                     document.getElementById('res-expiry').innerText = data.expiry;
                     document.getElementById('login-box').classList.add('hidden');
                     document.getElementById('status-box').classList.remove('hidden');
-                } else { alert("查無此 Email，請確認報名資料是否正確"); }
+                } else { alert("查無 Email，請確認報名資料是否正確"); }
             } catch (e) { alert("連線失敗，請檢查網路或 GAS 權限"); }
             btn.innerText = "進入系統";
         }
@@ -118,9 +114,11 @@
             const email = localStorage.getItem('korri_student_email');
             const msg = action === 'deduct' ? "【老師確認】要扣除一堂課嗎？" : "【老師確認】要獎勵一堂課嗎？";
             if(!confirm(msg)) return;
-            const res = await fetch(`${GAS_URL}?email=${encodeURIComponent(email)}&action=${action}`);
-            const data = await res.json();
-            if(data.status === "success") { alert("更新成功！"); checkStatus(); }
+            try {
+                const res = await fetch(`${GAS_URL}?email=${encodeURIComponent(email)}&action=${action}`);
+                const data = await res.json();
+                if(data.status === "success") { alert("更新成功！"); checkStatus(); }
+            } catch (e) { alert("更新失敗"); }
         }
 
         async function enterZoom() {
@@ -133,12 +131,13 @@
             const email = localStorage.getItem('korri_student_email');
             const amount = document.getElementById('report-amount').value;
             const five = document.getElementById('report-five').value;
+            const name = document.getElementById('res-name').innerText;
             if(!amount || !five) return alert("請填寫金額與末五碼");
             try {
                 await fetch(GAS_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({ email, amount, lastFive: five, name: document.getElementById('res-name').innerText })
+                    body: JSON.stringify({ email, amount, lastFive: five, name: name })
                 });
                 alert("回報成功！小狸老師核對後會手動更新您的堂數。");
             } catch (e) { alert("提交失敗"); }
