@@ -27,6 +27,7 @@
         .btn-teacher-add { background-color: #D1D5DB; color: #4B5563; padding: 0.6rem; border-radius: 0.75rem; width: 100%; font-size: 14px; }
         .input-field { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 2px solid #F3F4F6; border-radius: 1.25rem; outline: none; text-align: center; font-weight: bold; }
         .history-item { color: #9CA3AF; font-size: 13px; font-weight: normal; padding: 4px 0; border-bottom: 1px solid #F9FAFB; }
+        details summary { cursor: pointer; color: #9CA3AF; font-size: 14px; font-weight: normal; margin-top: 15px; outline: none; }
     </style>
 </head>
 <body class="p-6">
@@ -38,7 +39,7 @@
         <div id="login-box" class="card-container text-center">
             <h2 class="text-xl mb-6">學員登入</h2>
             <input type="email" id="login-email" placeholder="您的 Email" class="input-field">
-            <button onclick="checkStatus()" id="login-btn" class="btn-blue shadow-lg font-bold">進入系統</button>
+            <button onclick="checkStatus('login_record')" id="login-btn" class="btn-blue shadow-lg font-bold">進入系統</button>
         </div>
 
         <div id="status-box" class="hidden">
@@ -59,8 +60,13 @@
                 </div>
 
                 <div class="text-left mt-4">
-                    <p class="text-gray-400 text-xs mb-2 font-normal">🕒 課務紀錄：</p>
+                    <p class="text-gray-400 text-xs mb-2 font-normal">🕒 本期紀錄：</p>
                     <div id="res-history" class="flex flex-col"></div>
+                    
+                    <details class="mt-4">
+                        <summary>📁 查詢舊期數紀錄</summary>
+                        <div id="res-old-history" class="text-xs font-normal text-gray-400 mt-2 bg-gray-50 p-3 rounded-xl leading-relaxed"></div>
+                    </details>
                 </div>
             </div>
 
@@ -76,14 +82,14 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzssQPhEYFNz1Y6vBeEEpd4zSPpmuvCmZsVm7x3ifX0p0k6fayO3TkC2Sh5OGGDprl-/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbssQPhEYFNz1Y6vBeEEpd4zSPpmuvCmZsVm7x3ifX0p0k6fayO3TkC2Sh5OGGDprl-/exec";
         const ZOOM_LINK = "https://zoom.us/j/93019761780";
 
-        async function checkStatus() {
+        async function checkStatus(action) {
             const email = document.getElementById('login-email').value.trim();
             if(!email) return;
             try {
-                const res = await fetch(`${GAS_URL}?email=${encodeURIComponent(email)}`);
+                const res = await fetch(`${GAS_URL}?email=${encodeURIComponent(email)}&action=${action || ''}`);
                 const data = await res.json();
                 if(data.status === "success") {
                     localStorage.setItem('korri_student_email', email);
@@ -92,6 +98,12 @@
                     document.getElementById('res-name').innerText = data.name;
                     document.getElementById('res-history').innerHTML = data.history
                         .filter(h => h.trim() !== "").map(h => `<div class="history-item">${h}</div>`).join('');
+                    
+                    const oldHtml = data.oldHistory && data.oldHistory.length > 0 
+                        ? data.oldHistory.map(h => `<div class="mb-4 border-b border-gray-100 pb-2 text-gray-400">${h.replace(/\\n/g, '<br>')}</div>`).join('')
+                        : "尚無舊紀錄";
+                    document.getElementById('res-old-history').innerHTML = oldHtml;
+
                     document.getElementById('login-box').classList.add('hidden');
                     document.getElementById('status-box').classList.remove('hidden');
                 } else { alert("查無資料"); }
@@ -102,7 +114,7 @@
             const email = localStorage.getItem('korri_student_email');
             await fetch(`${GAS_URL}?email=${encodeURIComponent(email)}&action=zoom_checkin`);
             window.open(ZOOM_LINK, '_blank');
-            setTimeout(checkStatus, 2000);
+            setTimeout(() => checkStatus(), 2000);
         }
 
         async function teacherAction(action) {
@@ -117,19 +129,25 @@
             const email = localStorage.getItem('korri_student_email');
             const amount = document.getElementById('report-amount').value;
             const five = document.getElementById('report-five').value;
-            const name = document.getElementById('res-name').innerText;
             await fetch(GAS_URL, { 
                 method: 'POST', 
                 mode: 'no-cors', 
-                body: JSON.stringify({ email, amount, lastFive: five, name: name }) 
+                body: JSON.stringify({ email, amount, lastFive: five, name: document.getElementById('res-name').innerText }) 
             });
             alert("已收到回報");
         }
 
-        function logout() { localStorage.removeItem('korri_student_email'); location.reload(); }
+        function logout() { 
+            localStorage.removeItem('korri_student_email'); 
+            location.reload(); 
+        }
+
         window.onload = () => {
             const saved = localStorage.getItem('korri_student_email');
-            if(saved) { document.getElementById('login-email').value = saved; }
+            if(saved) { 
+                document.getElementById('login-email').value = saved; 
+                checkStatus();
+            }
         };
     </script>
 </body>
