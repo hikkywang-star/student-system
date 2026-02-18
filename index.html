@@ -37,9 +37,9 @@
         </header>
 
         <div id="login-box" class="card-container text-center">
-            <h2 class="text-xl mb-6">學員登入</h2>
+            <h2 class="text-xl mb-6 text-gray-700">學員登入</h2>
             <input type="email" id="login-email" placeholder="您的 Email" class="input-field">
-            <button onclick="checkStatus('login_record')" id="login-btn" class="btn-blue shadow-lg font-bold">進入系統</button>
+            <button onclick="checkStatus('login_record')" id="login-btn" class="btn-blue shadow-lg">進入系統</button>
         </div>
 
         <div id="status-box" class="hidden">
@@ -82,7 +82,7 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbssQPhEYFNz1Y6vBeEEpd4zSPpmuvCmZsVm7x3ifX0p0k6fayO3TkC2Sh5OGGDprl-/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwDuslVkTBRunOk-1rAfL74mbmfCP3nfh2Zf_O65Vn9SDvTRNJs_jn0ncZdSv73I48D/exec";
         const ZOOM_LINK = "https://zoom.us/j/93019761780";
 
         async function checkStatus(action) {
@@ -107,7 +107,7 @@
                     document.getElementById('login-box').classList.add('hidden');
                     document.getElementById('status-box').classList.remove('hidden');
                 } else { alert("查無資料"); }
-            } catch (e) { alert("連線失敗"); }
+            } catch (e) { alert("連線失敗，請檢查 GAS 部署權限"); }
         }
 
         async function enterZoom() {
